@@ -7,6 +7,7 @@ import time
 
 url_lista = "https://ninemanga.net/manga-list"
 
+
 def obtener_mangas(page: int = 1):
     r = requests.get(f"{url_lista}?page={page}")
     soup = BS(r.text, features='html.parser')
@@ -19,55 +20,44 @@ def obtener_mangas(page: int = 1):
         nombre = a_parsear[1].contents[1].attrs.get("alt")
         manga = Manga(nombre, imagen, enlace)
         mangas.append(manga)
-
     return mangas
 
-def obtener_capitulos(manga: Manga):
-    try:
-        r_zero = requests.get(f"{manga.enlace}/0")
-        r_uno = requests.get(f"{manga.enlace}/1")
-        if r_zero.status_code == 500 and r_uno.status_code == 500:
-            raise CapituloInicialInvalido(manga)
-    except CapituloInicialInvalido:
-        raise CapituloInicialInvalido(manga)
+#se obtinen los mangas desde la pagina principal del manga, menos hardcore si son 0 o 1, o incluso alguna wuea 0.0.0.01 xd
+def obtener_capitulos_menos_hard(manga: Manga):
+    r = requests.get(manga.enlace)
+    soup = BS(r.text, features='html.parser')
+    table = soup.find('table', attrs={'class': 'table-hover'})
+    table_body = table.find('tbody')
+    rows = table_body.find_all('tr')
+    enlaces_capitulos = []
+    for row in rows:
+        cols = row.find_all('td')
+        enlaces_capitulos.append(cols[1].parent.contents[1].contents[3].attrs.get("href"))
+    enlaces_capitulos.reverse()
+    manga.capitulos = enlaces_capitulos
 
-    enlace = f"{manga.enlace}/0" if r_zero.status_code != 500 else f"{manga.enlace}/1"
-    r = requests.get(enlace, timeout=None)
-    soup = BS(r.text, features="html.parser")
-    select_capitulos = soup.find("select", {"id": "c_list"})
-    capitulos = []
-    for wea in select_capitulos:
-        if type(wea) is Tag:
-            enlace = wea.attrs.get("value")
-            numero = float(enlace.split("/")[-1])
-            c = Capitulo(numero, enlace)
-            capitulos.append(c)
-    capitulos.reverse()
-    manga.capitulos = capitulos
 
 def obtener_manga_por_pagina_y_index(pagina: int, index: int):
-    try:
-        manga = obtener_mangas(pagina)[index]
-        obtener_capitulos(manga)
-        for c in manga.capitulos:
-            obtener_imagenes(c)
-    except IndexError:
-        return None
-    else:
-        return manga
+    manga = obtener_mangas(pagina)[index]
+    obtener_capitulos_menos_hard(manga)
+    obtener_img(manga.capitulos[0])
 
 
-def obtener_imagenes(capitulo: Capitulo):
-    r = requests.get(capitulo.enlace, timeout=None)
+# existen espacios en los links de las images y los deja como 'link base (espacio)' '(espacio) resto de link'
+# por eso recree este metodo
+def obtener_img(capitulo: Capitulo):
+    r = requests.get(capitulo)
     soup = BS(r.text, features="html.parser")
-    imgs = soup.find_all("img", {"class": "img-responsive"})
-    imagenes = [Imagen(img.attrs.get("data-src")) for img in imgs if img.attrs.get("data-src") is not None]
-    capitulo.imagenes = imagenes
+    images = soup.find_all("img", {"class": "img-responsive"})
+    enlaces_correctos = []
+    for img in images:
+        enlace_bruto = img.attrs.get("data-src")
+        if "None" not in str(enlace_bruto):
+            enlaces_correctos.append(enlace_bruto)
+    # por algun motivo agrega un none al final
+    pprint(enlaces_correctos)
+
 
 
 if __name__ == "__main__":
-    # a = time.clock()
-    pprint(obtener_manga_por_pagina_y_index(9, 18))
-    b = time.clock()
-    # print("tiempo total consulta: ", b - a)
-
+    pprint(obtener_manga_por_pagina_y_index(9, 19))
