@@ -59,7 +59,7 @@ def obtener_img(capitulo: Capitulo):
             enlace_sin_espacios.append(enlace_bruto.strip())
 
     pprint(enlace_sin_espacios)
-    # por algun motivo caga
+    # por algun motivo caga, no se puede añadir al capitulo
     # capitulo.imagenes = enlace_sin_espacios
 
 
