@@ -31,9 +31,8 @@ def obtener_capitulos_menos_hard(manga: Manga):
     table_body = table.find('tbody')
     rows = table_body.find_all('tr')
     enlaces_capitulos = []
-    for row in rows:
-        cols = row.find_all('td')
-        enlaces_capitulos.append(cols[1].parent.contents[1].contents[3].attrs.get("href"))
+    for row in rows: 
+        enlaces_capitulos.append(row.contents[1].contents[3].attrs.get("href"))
     enlaces_capitulos.reverse()
     manga.capitulos = enlaces_capitulos
 
