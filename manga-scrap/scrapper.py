@@ -22,7 +22,8 @@ def obtener_mangas(page: int = 1):
         mangas.append(manga)
     return mangas
 
-#se obtinen los mangas desde la pagina principal del manga, menos hardcore si son 0 o 1, o incluso alguna wuea 0.0.0.01 xd
+
+# se obtinen los mangas desde la pagina principal del manga, menos hardcore si son 0 o 1, o incluso alguna wuea 0.0.0.01 xd
 def obtener_capitulos_menos_hard(manga: Manga):
     r = requests.get(manga.enlace)
     soup = BS(r.text, features='html.parser')
@@ -45,19 +46,24 @@ def obtener_manga_por_pagina_y_index(pagina: int, index: int):
 
 # existen espacios en los links de las images y los deja como 'link base (espacio)' '(espacio) resto de link'
 # por eso recree este metodo
+# falta añadirlos al capitulo, por alguna razon no puedo añadirlo al capitulo
 def obtener_img(capitulo: Capitulo):
     r = requests.get(capitulo)
     soup = BS(r.text, features="html.parser")
     images = soup.find_all("img", {"class": "img-responsive"})
-    enlaces_correctos = []
+    enlace_sin_espacios = []
     for img in images:
         enlace_bruto = img.attrs.get("data-src")
         if "None" not in str(enlace_bruto):
-            enlaces_correctos.append(enlace_bruto)
-    # por algun motivo agrega un none al final
-    pprint(enlaces_correctos)
+            #evita espacios no manejados
+            enlace_sin_espacios.append(enlace_bruto.strip())
+
+    pprint(enlace_sin_espacios)
+    # por algun motivo caga
+    #capitulo.imagenes = enlace_sin_espacios
+
 
 
 
 if __name__ == "__main__":
-    pprint(obtener_manga_por_pagina_y_index(9, 19))
+    obtener_manga_por_pagina_y_index(9, 19)
