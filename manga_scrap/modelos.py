@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass, field
 from typing import List
-from .excepciones import NoExisteCapitulo
+#from .excepciones import NoExisteCapitulo
 
 class JsonSerializable:
     def to_json_string(self) -> str:
@@ -33,7 +33,7 @@ class Capitulo(JsonSerializable):
     Representación de un único capítulo de un manga. Las imágenes de un capítulo se van poblando en la medida
     que el capítulo es consultado.
     """
-    numero: float
+    nombre: str
     enlace: str
     imagenes: List[Imagen] = field(default_factory=list)
 
@@ -68,7 +68,8 @@ class Manga(JsonSerializable):
         try:
             capitulo = self.capitulos[index]
         except IndexError:
-            raise NoExisteCapitulo(self, index)
+            pass
+            #raise NoExisteCapitulo(self, index)
         else:
             return capitulo
 
