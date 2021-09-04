@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup as BS, Tag
-from manga import Manga, Capitulo, Imagen
-from exceptions import CapituloInicialInvalido
+from modelos import Manga, Capitulo, Imagen
+from excepciones import CapituloInicialInvalido
 from pprint import pprint
 import time
 
