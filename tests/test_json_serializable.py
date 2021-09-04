@@ -42,7 +42,7 @@ class MangaSerializacionTest(unittest.TestCase):
         "imagen": "imagen",
         "enlace": "enlace",
         "capitulos": [{
-            "numero": 1,
+            "nombre": "pepe",
             "enlace": "enlace_capitulo",
             "imagenes": [{
                 "enlace": "enlace_imagen"
@@ -54,7 +54,7 @@ class MangaSerializacionTest(unittest.TestCase):
 
     def setUp(self) -> None:
         img = Imagen("enlace_imagen")
-        capitulo = Capitulo(1, "enlace_capitulo", [img])
+        capitulo = Capitulo("pepe", "enlace_capitulo", [img])
         self.manga = Manga("nombre", "imagen", "enlace", [capitulo])
 
     def test_manga_serializacion(self):

@@ -5,7 +5,7 @@ from manga_scrap.excepciones import NoExisteCapitulo
 class TestManga(unittest.TestCase):
     def setUp(self) -> None:
         img = Imagen("enlace_imagen")
-        capitulo = Capitulo(1, "enlace_capitulo", [img])
+        capitulo = Capitulo("pepe", "enlace_capitulo", [img])
         self.manga = Manga("nombre", "imagen", "enlace", [capitulo])
 
 
