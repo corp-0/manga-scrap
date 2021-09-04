@@ -41,6 +41,10 @@ class ProveedorTest(unittest.TestCase):
         self.assertEqual(9, manga.n_imagenes)
         self.assertEqual(3, manga.n_capitulos)
 
+    def test_imagenes_anadidas_al_capitulo(self):
+        manga = self.proveedor.obtener_manga(self.catalogo[0])
+        self.proveedor.obtener_img(manga.capitulos[0])
+        self.assertEqual(2, len(manga.capitulos[0].imagenes))
 
 if __name__ == '__main__':
     unittest.main()

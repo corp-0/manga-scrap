@@ -9,8 +9,8 @@ class PruebaProveedor(Proveedor):
     Proveedor de prueba que devuelve un catálogo de 3 mangas, cada uno con 3 capítulo y cada capítulo con 3 fotos.
     """
 
-    def obtener_img(capitulo: Capitulo) -> None:
-        pass
+    def obtener_img(self, capitulo: Capitulo) -> None:
+        capitulo.imagenes = [Imagen("Imagen 1"), Imagen("Imagen 2")]
 
     @property
     def nombre(self) -> str:
