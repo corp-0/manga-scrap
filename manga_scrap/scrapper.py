@@ -50,16 +50,15 @@ def obtener_img(capitulo: Capitulo):
     r = requests.get(capitulo)
     soup = BS(r.text, features="html.parser")
     images = soup.find_all("img", {"class": "img-responsive"})
-    enlace_sin_espacios = []
+    lista_images = []
     for img in images:
         enlace_bruto = img.attrs.get("data-src")
         if "None" not in str(enlace_bruto):
             # evita espacios no manejados
-            enlace_sin_espacios.append(enlace_bruto.strip())
+            lista_images.append(enlace_bruto.strip())
 
-    pprint(enlace_sin_espacios)
-    # por algun motivo caga, no se puede añadir al capitulo
-    # capitulo.imagenes = enlace_sin_espacios
+    capitulo.imagenes = lista_images
+
 
 
 if __name__ == "__main__":

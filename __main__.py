@@ -5,4 +5,5 @@ if __name__ == "__main__":
     for manga in nine.catalogo:
         if ("Dagashi Kashi" in manga.nombre):
             manga_buscado = nine.obtener_manga(manga)
+            nine.obtener_img(manga_buscado.capitulos[0])
             print(manga_buscado.capitulos)

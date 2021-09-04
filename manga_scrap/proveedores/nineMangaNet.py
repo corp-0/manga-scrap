@@ -1,5 +1,5 @@
 from typing import List
-from manga_scrap.modelos import MangaPreview, Manga, Capitulo
+from manga_scrap.modelos import MangaPreview, Manga, Capitulo, Imagen
 from .proveedor import Proveedor
 import requests
 from bs4 import BeautifulSoup as BS
@@ -25,6 +25,13 @@ class NineMangaNet(Proveedor):
         capitulos = self._obtener_capitulos_menos_hard(preview.enlace_manga)
         manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos)
         return manga
+
+    def _contar_paginas(self):
+        r = requests.get(url_lista)
+        soup = BS(r.text, features='html.parser')
+        paginas = soup.find('ul', attrs={'class': 'pagination'})
+        numero_paginas = paginas.contents[-4].contents[0].contents[0]
+        return int(numero_paginas)
 
     def _obtener_mangas(self, page: int):
 
@@ -54,12 +61,14 @@ class NineMangaNet(Proveedor):
             capitulos.append(Capitulo(nombre, enlace_capitulo))
         return capitulos
 
-    def _contar_paginas(self):
-        r = requests.get(url_lista)
-        soup = BS(r.text, features='html.parser')
-        paginas = soup.find('ul', attrs={'class': 'pagination'})
-        numero_paginas = paginas.contents[-4].contents[0].contents[0]
-        return int(numero_paginas)
-
-
-
+    def obtener_img(self, capitulo: Capitulo):
+        r = requests.get(capitulo.enlace)
+        soup = BS(r.text, features="html.parser")
+        images = soup.find_all("img", {"class": "img-responsive"})
+        lista_images = []
+        for img in images:
+            enlace_bruto = img.attrs.get("data-src")
+            if "None" not in str(enlace_bruto):
+                # evita espacios no manejados
+                lista_images.append(Imagen(enlace_bruto.strip()))
+        capitulo.imagenes = lista_images

@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass, field
 from typing import List
-#from .excepciones import NoExisteCapitulo
+from .excepciones import NoExisteCapitulo
 
 class JsonSerializable:
     def to_json_string(self) -> str:
@@ -68,8 +68,7 @@ class Manga(JsonSerializable):
         try:
             capitulo = self.capitulos[index]
         except IndexError:
-            pass
-            #raise NoExisteCapitulo(self, index)
+            raise NoExisteCapitulo(self, index)
         else:
             return capitulo
 
