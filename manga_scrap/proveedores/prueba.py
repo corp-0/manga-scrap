@@ -1,16 +1,13 @@
 from typing import List
 
 from .proveedor import Proveedor
-from ..modelos import MangaPreview, Manga, Capitulo, Imagen
+from ..modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
 
 
 class PruebaProveedor(Proveedor):
     """
     Proveedor de prueba que devuelve un catálogo de 3 mangas, cada uno con 3 capítulo y cada capítulo con 3 fotos.
     """
-
-    def obtener_img(self, capitulo: Capitulo) -> None:
-        capitulo.imagenes = [Imagen("Imagen 1"), Imagen("Imagen 2")]
 
     @property
     def nombre(self) -> str:
@@ -33,7 +30,14 @@ class PruebaProveedor(Proveedor):
         for i in range(1, 4):
             c = Capitulo(i, f"{preview.enlace_manga}/cap/{i}", imagenes)
             capitulos.append(c)
-
-        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos)
+        genero: List[Genero] = [Genero("Hentai")]
+        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, genero)
 
         return manga
+
+    def obtener_img(self, capitulo: Capitulo) -> None:
+        capitulo.imagenes = [Imagen("Imagen 1"), Imagen("Imagen 2")]
+
+    def obtener_generos(self, manga: Manga):
+        genero: List[Genero] = [Genero("Hentai")]
+        manga.generos = genero

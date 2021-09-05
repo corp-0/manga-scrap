@@ -1,13 +1,14 @@
 from typing import List
-from manga_scrap.modelos import MangaPreview, Manga, Capitulo, Imagen
-from .proveedor import Proveedor
+from manga_scrap.modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
+from manga_scrap.proveedores.proveedor import Proveedor
 import requests
-from bs4 import BeautifulSoup as BS
+from bs4 import BeautifulSoup as BS, Tag
 
 url_lista = "https://ninemanga.net/manga-list"
 
 
 class NineMangaNet(Proveedor):
+
     @property
     def nombre(self) -> str:
         return "Nombre X"
@@ -23,7 +24,8 @@ class NineMangaNet(Proveedor):
 
     def construir_manga(self, preview: MangaPreview) -> Manga:
         capitulos = self._obtener_capitulos_menos_hard(preview.enlace_manga)
-        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos)
+        generos = self.obtener_generos(preview.enlace_manga)
+        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, generos)
         return manga
 
     def _contar_paginas(self):
@@ -72,3 +74,17 @@ class NineMangaNet(Proveedor):
                 # evita espacios no manejados
                 lista_images.append(Imagen(enlace_bruto.strip()))
         capitulo.imagenes = lista_images
+
+    def obtener_generos(self, enlace):
+        r = requests.get(enlace)
+        soup = BS(r.text, features='html.parser')
+        # contiene la reseña, autor, generos, el estado de publicacion
+        datos_interesantes = soup.find_all('span', attrs={'class': 'list-group-item'})
+        lista__categorias = datos_interesantes[5].contents
+        categorias = []
+        for c in lista__categorias:
+            if type(c) is Tag and "None" not in str(c.attrs.get("href")):
+                genero = c.contents[0]
+                categorias.append(Genero(genero))
+
+        return categorias

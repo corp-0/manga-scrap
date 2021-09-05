@@ -3,9 +3,11 @@ from dataclasses import dataclass, field
 from typing import List
 from .excepciones import NoExisteCapitulo
 
+
 class JsonSerializable:
     def to_json_string(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False).encode("utf-8").decode()
+
 
 @dataclass()
 class MangaPreview(JsonSerializable):
@@ -20,12 +22,22 @@ class MangaPreview(JsonSerializable):
     enlace_imagen: str
     enlace_manga: str
 
+
 @dataclass()
 class Imagen(JsonSerializable):
     """
     Representación de una única imagen/hoja de un manga
     """
     enlace: str
+
+
+@dataclass()
+class Genero(JsonSerializable):
+    """
+    Representacion de un unico genero para un manga
+    """
+    genero: str
+
 
 @dataclass()
 class Capitulo(JsonSerializable):
@@ -36,6 +48,7 @@ class Capitulo(JsonSerializable):
     nombre: str
     enlace: str
     imagenes: List[Imagen] = field(default_factory=list)
+
 
 @dataclass()
 class Manga(JsonSerializable):
@@ -51,6 +64,7 @@ class Manga(JsonSerializable):
     imagen: str
     enlace: str
     capitulos: List[Capitulo]
+    generos: List[Genero]
 
     @property
     def n_capitulos(self) -> int:
@@ -62,6 +76,13 @@ class Manga(JsonSerializable):
         for c in self.capitulos:
             total += len(c.imagenes)
 
+        return total
+
+    @property
+    def n_generos(self) -> int:
+        total = 0
+        for c in self.generos:
+            total += 1
         return total
 
     def obtener_capitulo(self, index: int):
@@ -77,11 +98,7 @@ class Manga(JsonSerializable):
             f"*** Manga *** \n" \
             f"nombre: {self.nombre} \n" \
             f"enlace: {self.enlace} \n" \
+            f"Generos: {self.generos} \n" \
             f"imagen: {self.imagen} \n" \
             f"nº caps: {self.n_capitulos} \n" \
             f"nº imágenes: {self.n_imagenes}"
-
-
-
-
-

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..modelos import MangaPreview, Manga, Capitulo
+from ..modelos import MangaPreview, Manga, Capitulo, Genero
 from typing import List
 
 
@@ -54,13 +54,19 @@ class Proveedor(ABC):
 
         return self._mangas[preview.enlace_manga]
 
-
     @abstractmethod
-    def obtener_img(capitulo: Capitulo) -> None:
+    def obtener_img(self, capitulo: Capitulo) -> None:
         """
         este metodo recibe un capitulo (enlace) y lo analiza buscando todas las imagenes del mismo
         para posteriormente añadirselas al capitulo en cuestion
         :return:
         """
 
-
+    @abstractmethod
+    def obtener_generos(self, preview: MangaPreview):
+        """
+        este metodo recibe un link del manga y obtiene todos los generos a los cuales pertenece
+        y se los añade al manga
+        :param preview: preview del catálogo
+        :return:
+        """
