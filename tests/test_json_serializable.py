@@ -1,6 +1,6 @@
 import unittest
 import json
-from manga_scrap.modelos import JsonSerializable, Manga, Capitulo, Imagen
+from manga_scrap.modelos import JsonSerializable, Manga, Capitulo, Imagen, Genero
 from dataclasses import dataclass
 
 
@@ -49,13 +49,17 @@ class MangaSerializacionTest(unittest.TestCase):
             }
             ]
         }
-        ]
+        ],
+        "generos": [{
+            "genero": "Hentai"
+        }]
     }
 
     def setUp(self) -> None:
         img = Imagen("enlace_imagen")
         capitulo = Capitulo("pepe", "enlace_capitulo", [img])
-        self.manga = Manga("nombre", "imagen", "enlace", [capitulo])
+        genero = Genero("Hentai")
+        self.manga = Manga("nombre", "imagen", "enlace", [capitulo], [genero])
 
     def test_manga_serializacion(self):
         self.assertEqual(self.esperado, json.loads(self.manga.to_json_string()))

@@ -46,5 +46,12 @@ class ProveedorTest(unittest.TestCase):
         self.proveedor.obtener_img(manga.capitulos[0])
         self.assertEqual(2, len(manga.capitulos[0].imagenes))
 
+    def test_generos_anidadas_al_manga(self):
+        manga = self.proveedor.obtener_manga(self.catalogo[0])
+        self.proveedor.obtener_generos(manga)
+
+
+##tdd test driven developen
+
 if __name__ == '__main__':
     unittest.main()
