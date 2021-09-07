@@ -34,7 +34,7 @@ class Imagen(JsonSerializable):
 @dataclass()
 class Genero(JsonSerializable):
     """
-    Representacion de un unico genero para un manga
+    Representacion de un único genero para un manga
     """
     genero: str
 
