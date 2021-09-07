@@ -36,7 +36,6 @@ class NineMangaNet(Proveedor):
         return int(numero_paginas)
 
     def _obtener_mangas(self, page: int):
-
         r = requests.get(f"{url_lista}?page={page}")
         soup = BS(r.text, features='html.parser')
         cosa = soup.find_all("div", {"class": "thumbnail"})
