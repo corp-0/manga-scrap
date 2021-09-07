@@ -16,7 +16,7 @@ class PruebaProveedor(Proveedor):
     def generar_catalogo(self) -> List[MangaPreview]:
         preview: List[MangaPreview] = []
         for i in range(1, 4):
-            p = MangaPreview(f"Manga Nº{i}", f"https://dummy.cl/portada/{i}", f"https://dummy.cl/manga/{i}")
+            p = MangaPreview(f"Manga Nº{i}", f"https://dummy.cl/portada/{i}", f"https://dummy.cl/manga/{i}", self.obtener_generos(f"https://dummy.cl/manga/{i}"))
             preview.append(p)
         return preview
 
@@ -38,6 +38,6 @@ class PruebaProveedor(Proveedor):
     def obtener_img(self, capitulo: Capitulo) -> None:
         capitulo.imagenes = [Imagen("Imagen 1"), Imagen("Imagen 2")]
 
-    def obtener_generos(self, manga: Manga):
+    def obtener_generos(self, enlace: str):
         genero: List[Genero] = [Genero("Hentai")]
-        manga.generos = genero
+        return genero

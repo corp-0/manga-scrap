@@ -10,6 +10,14 @@ class JsonSerializable:
 
 
 @dataclass()
+class Genero(JsonSerializable):
+    """
+    Representacion de un único genero para un manga
+    """
+    genero: str
+
+
+@dataclass()
 class MangaPreview(JsonSerializable):
     """
     Representación de un manga sin contenido, visto desde el catálogo.
@@ -21,6 +29,7 @@ class MangaPreview(JsonSerializable):
     nombre: str
     enlace_imagen: str
     enlace_manga: str
+    generos: List[Genero]
 
 
 @dataclass()
@@ -29,14 +38,6 @@ class Imagen(JsonSerializable):
     Representación de una única imagen/hoja de un manga
     """
     enlace: str
-
-
-@dataclass()
-class Genero(JsonSerializable):
-    """
-    Representacion de un único genero para un manga
-    """
-    genero: str
 
 
 @dataclass()
@@ -65,6 +66,7 @@ class Manga(JsonSerializable):
     enlace: str
     capitulos: List[Capitulo]
     generos: List[Genero]
+    contenido_adulto: bool = False
 
     @property
     def n_capitulos(self) -> int:
@@ -81,9 +83,6 @@ class Manga(JsonSerializable):
     @property
     def n_generos(self) -> int:
         return len(self.generos)
-        for c in self.generos:
-            total += 1
-        return total
 
     def obtener_capitulo(self, index: int):
         try:

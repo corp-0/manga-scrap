@@ -63,10 +63,10 @@ class Proveedor(ABC):
         """
 
     @abstractmethod
-    def obtener_generos(self, preview: MangaPreview):
+    def obtener_generos(self, enlace: str):
         """
         este metodo recibe un link del manga y obtiene todos los generos a los cuales pertenece
         y se los añade al manga
-        :param preview: preview del catálogo
+        :param enlace: preview del catálogo
         :return:
         """

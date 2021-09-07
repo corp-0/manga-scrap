@@ -18,14 +18,13 @@ class NineMangaNet(Proveedor):
         previews_lista = []
         for i in range(numero_paginas):
             i += 1
-            previews = self._obtener_mangas(i)
+            previews = self._obtener_preview_mangas(i)
             previews_lista += previews
         return previews_lista
 
     def construir_manga(self, preview: MangaPreview) -> Manga:
         capitulos = self._obtener_capitulos_menos_hard(preview.enlace_manga)
-        generos = self.obtener_generos(preview.enlace_manga)
-        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, generos)
+        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, preview.generos)
         return manga
 
     def _contar_paginas(self):
@@ -35,7 +34,7 @@ class NineMangaNet(Proveedor):
         numero_paginas = paginas.contents[-4].contents[0].contents[0]
         return int(numero_paginas)
 
-    def _obtener_mangas(self, page: int):
+    def _obtener_preview_mangas(self, page: int):
         r = requests.get(f"{url_lista}?page={page}")
         soup = BS(r.text, features='html.parser')
         cosa = soup.find_all("div", {"class": "thumbnail"})
@@ -45,7 +44,7 @@ class NineMangaNet(Proveedor):
             enlace = a_parsear[1].attrs.get("href")
             imagen = a_parsear[1].contents[1].attrs.get("src")
             nombre = a_parsear[1].contents[1].attrs.get("alt")
-            manga = MangaPreview(nombre, imagen, enlace)
+            manga = MangaPreview(nombre, imagen, enlace, self.obtener_generos(enlace))
             mangas_previews.append(manga)
         return mangas_previews
 
@@ -80,10 +79,11 @@ class NineMangaNet(Proveedor):
         # contiene la reseña, autor, generos, el estado de publicacion
         datos_interesantes = soup.find_all('span', attrs={'class': 'list-group-item'})
         lista__categorias = datos_interesantes[5].contents
+        if lista__categorias is None:
+            return [Genero("Desconocido")]
         categorias = []
         for c in lista__categorias:
             if type(c) is Tag and "None" not in str(c.attrs.get("href")):
                 genero = c.contents[0]
                 categorias.append(Genero(genero))
-
         return categorias
