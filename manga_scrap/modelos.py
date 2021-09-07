@@ -80,7 +80,7 @@ class Manga(JsonSerializable):
 
     @property
     def n_generos(self) -> int:
-        total = 0
+        return len(self.generos)
         for c in self.generos:
             total += 1
         return total
