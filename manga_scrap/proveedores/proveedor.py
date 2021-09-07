@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..modelos import MangaPreview, Manga, Capitulo, Genero
+from ..modelos import MangaPreview, Manga, Capitulo
 from typing import List
 
 
