@@ -41,6 +41,7 @@ class MangaSerializacionTest(unittest.TestCase):
         "nombre": "nombre",
         "imagen": "imagen",
         "enlace": "enlace",
+        "contenido_adulto": False,
         "capitulos": [{
             "nombre": "pepe",
             "enlace": "enlace_capitulo",

@@ -1,6 +1,6 @@
 import unittest
 
-from manga_scrap.modelos import MangaPreview
+from manga_scrap.modelos import MangaPreview, Genero
 from manga_scrap.proveedores.prueba import PruebaProveedor
 
 
@@ -32,7 +32,8 @@ class ProveedorTest(unittest.TestCase):
         self.assertIsNotNone(manga)
 
     def test_obtener_manga_fuera_de_catalogo_lo_agrega_a_catalogo(self):
-        preview = MangaPreview(nombre="nombre", enlace_manga="enlace_manga", enlace_imagen="enlace_imagen")
+        preview = MangaPreview(nombre="nombre", enlace_manga="enlace_manga", enlace_imagen="enlace_imagen",
+                               generos=[Genero("Hentai")])
         manga = self.proveedor.obtener_manga(preview)
         self.assertEqual(preview.nombre, manga.nombre)
         self.assertEqual(preview.enlace_manga, manga.enlace)
@@ -48,7 +49,7 @@ class ProveedorTest(unittest.TestCase):
 
     def test_generos_anidadas_al_manga(self):
         manga = self.proveedor.obtener_manga(self.catalogo[0])
-        self.proveedor.obtener_generos(manga)
+        self.assertEqual(Genero("Hentai"), manga.generos[0])
 
 
 ##tdd test driven developen
