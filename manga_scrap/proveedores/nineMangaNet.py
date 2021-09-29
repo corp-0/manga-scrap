@@ -11,7 +11,7 @@ class NineMangaNet(Proveedor):
 
     @property
     def nombre(self) -> str:
-        return "Nombre X"
+        return "NineManga.net"
 
     def generar_catalogo(self) -> List[MangaPreview]:
         numero_paginas = self._contar_paginas()
@@ -23,7 +23,7 @@ class NineMangaNet(Proveedor):
         return previews_lista
 
     def construir_manga(self, preview: MangaPreview) -> Manga:
-        capitulos = self._obtener_capitulos_menos_hard(preview.enlace_manga)
+        capitulos = self._obtener_capitulos(preview.enlace_manga)
         manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, preview.generos)
         return manga
 
@@ -48,7 +48,7 @@ class NineMangaNet(Proveedor):
             mangas_previews.append(manga)
         return mangas_previews
 
-    def _obtener_capitulos_menos_hard(self, enlace: str):
+    def _obtener_capitulos(self, enlace: str):
         r = requests.get(enlace)
         soup = BS(r.text, features='html.parser')
         table = soup.find('table', attrs={'class': 'table-hover'})
