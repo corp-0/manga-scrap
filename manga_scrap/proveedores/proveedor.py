@@ -7,6 +7,7 @@ from ..excepciones import ServidorRespondeContenidoProhibido
 
 log = logging.getLogger("manga_scrap")
 
+log = logging.getLogger("manga_scrap")
 
 class Proveedor(ABC):
     """
