@@ -14,3 +14,8 @@ class NoExisteCapitulo(BaseError):
             f"Manga: {manga.nombre} no tiene un capítulo de índice {index}"
         )
 
+class ServidorRespondeContenidoProhibido(BaseError):
+    def __init__(self, enlace: str):
+        super().__init__(
+            f"Enlace: {enlace} ha prohibido el acceso a su contenido (error 403)"
+        )
