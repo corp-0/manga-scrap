@@ -41,7 +41,7 @@ class Proveedor(ABC):
         """
 
     @abstractmethod
-    def generar_catalogo(self) -> List[MangaPreview]:
+    def generar_catalogo (self, pagina : int = None)  -> List[MangaPreview]:
         """
         Scrapea la lista de mangas para generar un catálogo
 
