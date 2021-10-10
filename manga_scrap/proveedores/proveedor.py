@@ -1,7 +1,9 @@
+import logging
 from abc import ABC, abstractmethod
 from ..modelos import MangaPreview, Manga, Capitulo
 from typing import List
 
+log = logging.getLogger("manga_scrap")
 
 class Proveedor(ABC):
     """

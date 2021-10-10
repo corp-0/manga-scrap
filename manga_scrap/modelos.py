@@ -1,8 +1,10 @@
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import List
 from .excepciones import NoExisteCapitulo
 
+log = logging.getLogger("manga_scrap")
 
 class JsonSerializable:
     def to_json_string(self) -> str:

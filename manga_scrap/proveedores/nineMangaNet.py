@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from manga_scrap.modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
 from manga_scrap.proveedores.proveedor import Proveedor
@@ -5,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup as BS, Tag
 
 url_lista = "https://ninemanga.net/manga-list"
-
+log = logging.getLogger("manga_scrap")
 
 class NineMangaNet(Proveedor):
 
@@ -14,6 +15,7 @@ class NineMangaNet(Proveedor):
         return "NineManga.net"
 
     def generar_catalogo(self) -> List[MangaPreview]:
+        log.info("Generando catálogo...")
         numero_paginas = self._contar_paginas()
         previews_lista = []
         for i in range(numero_paginas):
@@ -23,11 +25,13 @@ class NineMangaNet(Proveedor):
         return previews_lista
 
     def construir_manga(self, preview: MangaPreview) -> Manga:
+        log.info(f"Construyendo manga desde preview {preview.nombre} ...")
         capitulos = self._obtener_capitulos(preview.enlace_manga)
         manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, preview.generos)
         return manga
 
     def _contar_paginas(self):
+        log.debug("Contando páginas...")
         r = requests.get(url_lista)
         soup = BS(r.text, features='html.parser')
         paginas = soup.find('ul', attrs={'class': 'pagination'})
@@ -35,6 +39,7 @@ class NineMangaNet(Proveedor):
         return int(numero_paginas)
 
     def _obtener_preview_mangas(self, page: int):
+        log.debug("Obteniendo previews...")
         r = requests.get(f"{url_lista}?page={page}")
         soup = BS(r.text, features='html.parser')
         cosa = soup.find_all("div", {"class": "thumbnail"})
@@ -49,6 +54,7 @@ class NineMangaNet(Proveedor):
         return mangas_previews
 
     def _obtener_capitulos(self, enlace: str):
+        log.debug(f"Obteniendo capítulos desde enlace {enlace}...")
         r = requests.get(enlace)
         soup = BS(r.text, features='html.parser')
         table = soup.find('table', attrs={'class': 'table-hover'})
@@ -62,6 +68,7 @@ class NineMangaNet(Proveedor):
         return capitulos
 
     def obtener_img(self, capitulo: Capitulo):
+        log.info(f"Obteniendo imágenes de capítulo {capitulo.nombre}...")
         r = requests.get(capitulo.enlace)
         soup = BS(r.text, features="html.parser")
         images = soup.find_all("img", {"class": "img-responsive"})
@@ -74,6 +81,7 @@ class NineMangaNet(Proveedor):
         capitulo.imagenes = lista_images
 
     def obtener_generos(self, enlace):
+        log.info(f"Obteniendo géneros para manga con enlace {enlace}")
         r = requests.get(enlace)
         soup = BS(r.text, features='html.parser')
         # contiene la reseña, autor, generos, el estado de publicacion
