@@ -7,6 +7,7 @@ from ..excepciones import ServidorRespondeContenidoProhibido
 
 log = logging.getLogger("manga_scrap")
 
+
 class Proveedor(ABC):
     """
     Clase base que define la interfaz para todas las implementaciones que representan a un proveedor de contenido,
@@ -22,7 +23,8 @@ class Proveedor(ABC):
             log.error(f"El proveedor {self.nombre} con url {self.url_catalogo} ha prohibido el acceso a su contenido.")
             raise ServidorRespondeContenidoProhibido(self.url_catalogo)
         if respuesta.status_code != 200:
-            log.warning(f"El proveedor {self.nombre} con url {self.url_catalogo} ha respondido con código diferente a 200: {respuesta.status_code}")
+            log.warning(
+                f"El proveedor {self.nombre} con url {self.url_catalogo} ha respondido con código diferente a 200: {respuesta.status_code}")
 
     @property
     @abstractmethod
