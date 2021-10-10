@@ -6,6 +6,7 @@ from .excepciones import NoExisteCapitulo
 
 log = logging.getLogger("manga_scrap")
 
+
 class JsonSerializable:
     def to_json_string(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False).encode("utf-8").decode()
@@ -17,6 +18,12 @@ class Genero(JsonSerializable):
     Representacion de un único genero para un manga
     """
     genero: str
+
+    def __repr__(self):
+        return self.genero
+
+    def __str__(self):
+        return self.genero
 
 
 @dataclass()

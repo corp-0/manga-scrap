@@ -12,6 +12,10 @@ class PruebaProveedor(Proveedor):
     """
 
     @property
+    def url_catalogo(self) -> str:
+        return "prueba.net"
+
+    @property
     def nombre(self) -> str:
         return "Proveedor Dummy"
 
