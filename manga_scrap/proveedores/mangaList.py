@@ -27,9 +27,9 @@ class MangaList(Proveedor):
         log.debug(f'Número de paginas {numero_paginas}')
         return int(numero_paginas)
 
-    def generar_catalogo(self) -> List[MangaPreview]:
+    def generar_catalogo(self, pagina: int = None) -> List[MangaPreview]:
         log.debug("Generando catalogo")
-        numero_paginas = self.contar_paginas()
+        numero_paginas = pagina if pagina else self.contar_paginas()
         previews_lista = []
         for i in range(numero_paginas):
             i += 1
