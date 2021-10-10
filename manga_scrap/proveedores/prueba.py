@@ -1,13 +1,19 @@
+import logging
 from typing import List
 
 from .proveedor import Proveedor
 from ..modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
 
+log = logging.getLogger("manga_scrap")
 
 class PruebaProveedor(Proveedor):
     """
     Proveedor de prueba que devuelve un catálogo de 3 mangas, cada uno con 3 capítulo y cada capítulo con 3 fotos.
     """
+
+    @property
+    def url_catalogo(self) -> str:
+        return "prueba.net"
 
     @property
     def nombre(self) -> str:

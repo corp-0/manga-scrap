@@ -1,7 +1,10 @@
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import List
 from .excepciones import NoExisteCapitulo
+
+log = logging.getLogger("manga_scrap")
 
 
 class JsonSerializable:
@@ -15,6 +18,12 @@ class Genero(JsonSerializable):
     Representacion de un único genero para un manga
     """
     genero: str
+
+    def __repr__(self):
+        return self.genero
+
+    def __str__(self):
+        return self.genero
 
 
 @dataclass()
