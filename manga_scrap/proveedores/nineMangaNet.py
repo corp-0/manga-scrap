@@ -30,7 +30,7 @@ class NineMangaNet(Proveedor):
         manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, preview.generos)
         return manga
 
-    def _contar_paginas(self):
+    def _contar_paginas(self, pagina: int = None):
         log.debug("Contando páginas...")
         r = requests.get(url_lista)
         soup = BS(r.text, features='html.parser')

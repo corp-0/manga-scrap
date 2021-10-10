@@ -6,6 +6,7 @@ from ..modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
 
 log = logging.getLogger("manga_scrap")
 
+
 class PruebaProveedor(Proveedor):
     """
     Proveedor de prueba que devuelve un catálogo de 3 mangas, cada uno con 3 capítulo y cada capítulo con 3 fotos.
@@ -19,10 +20,11 @@ class PruebaProveedor(Proveedor):
     def nombre(self) -> str:
         return "Proveedor Dummy"
 
-    def generar_catalogo(self) -> List[MangaPreview]:
+    def generar_catalogo(self, pagina: int = None) -> List[MangaPreview]:
         preview: List[MangaPreview] = []
         for i in range(1, 4):
-            p = MangaPreview(f"Manga Nº{i}", f"https://dummy.cl/portada/{i}", f"https://dummy.cl/manga/{i}", self.obtener_generos(f"https://dummy.cl/manga/{i}"))
+            p = MangaPreview(f"Manga Nº{i}", f"https://dummy.cl/portada/{i}", f"https://dummy.cl/manga/{i}",
+                             self.obtener_generos(f"https://dummy.cl/manga/{i}"))
             preview.append(p)
         return preview
 
