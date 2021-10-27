@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from .proveedor import Proveedor
-from ..modelos import MangaPreview, Manga, Capitulo, Imagen, Genero
+from ..modelos import MangaPreview, Imagen, Genero, CapituloDetalle, MangaDetalle, CapituloPreview
 
 log = logging.getLogger("manga_scrap")
 
@@ -24,28 +24,26 @@ class PruebaProveedor(Proveedor):
         preview: List[MangaPreview] = []
         for i in range(1, 4):
             p = MangaPreview(f"Manga Nº{i}", f"https://dummy.cl/portada/{i}", f"https://dummy.cl/manga/{i}",
-                             self.obtener_generos(f"https://dummy.cl/manga/{i}"))
+                             [Genero("Hentai")], True)
             preview.append(p)
         return preview
 
-    def construir_manga(self, preview: MangaPreview) -> Manga:
+    def obtener_manga_detalle(self, preview: MangaPreview) -> MangaDetalle:
+        detalle = MangaDetalle(
+            preview.nombre,
+            preview.enlace_imagen,
+            preview.enlace_manga,
+            preview.contenido_adulto,
+            preview.generos,
+            [CapituloPreview("capítulo 1", "https://dummy-c.com/1"), CapituloPreview("capítulo 2", "https://dummy-c.com/2"), CapituloPreview("capítulo 3", "https://dummy-c.com/3")]
+        )
+
+        return detalle
+
+    def obtener_capitulo_detalle(self, capitulo: CapituloPreview) -> CapituloDetalle:
         imagenes: List[Imagen] = []
         for i in range(1, 4):
-            img = Imagen(f"{preview.enlace_manga}/img/{i}")
+            img = Imagen("https://dummy-img/i")
             imagenes.append(img)
 
-        capitulos: List[Capitulo] = []
-        for i in range(1, 4):
-            c = Capitulo(i, f"{preview.enlace_manga}/cap/{i}", imagenes)
-            capitulos.append(c)
-        genero: List[Genero] = [Genero("Hentai")]
-        manga = Manga(preview.nombre, preview.enlace_imagen, preview.enlace_manga, capitulos, genero)
-
-        return manga
-
-    def obtener_img(self, capitulo: Capitulo) -> None:
-        capitulo.imagenes = [Imagen("Imagen 1"), Imagen("Imagen 2")]
-
-    def obtener_generos(self, enlace: str):
-        genero: List[Genero] = [Genero("Hentai")]
-        return genero
+        return CapituloDetalle("Capítulo 1", "https://dummy-c/1", imagenes)

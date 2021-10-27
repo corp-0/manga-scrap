@@ -1,6 +1,6 @@
 import unittest
 import json
-from manga_scrap.modelos import JsonSerializable, Manga, Capitulo, Imagen, Genero
+from manga_scrap.modelos import JsonSerializable
 from dataclasses import dataclass
 
 
@@ -34,37 +34,6 @@ class ObjetoSimpleTest(unittest.TestCase):
 
     def test_de_json_a_objeto(self):
         self.assertEqual(self.obj, ObjetoSimple(**self.deserializado))
-
-
-class MangaSerializacionTest(unittest.TestCase):
-    esperado = {
-        "nombre": "nombre",
-        "imagen": "imagen",
-        "enlace": "enlace",
-        "contenido_adulto": False,
-        "capitulos": [{
-            "nombre": "pepe",
-            "enlace": "enlace_capitulo",
-            "imagenes": [{
-                "enlace": "enlace_imagen"
-            }
-            ]
-        }
-        ],
-        "generos": [{
-            "genero": "Hentai"
-        }]
-    }
-
-    def setUp(self) -> None:
-        img = Imagen("enlace_imagen")
-        capitulo = Capitulo("pepe", "enlace_capitulo", [img])
-        genero = Genero("Hentai")
-        self.manga = Manga("nombre", "imagen", "enlace", [capitulo], [genero])
-
-    def test_manga_serializacion(self):
-        self.assertEqual(self.esperado, json.loads(self.manga.to_json_string()))
-
 
 if __name__ == '__main__':
     unittest.main()

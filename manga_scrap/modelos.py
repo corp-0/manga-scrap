@@ -1,8 +1,7 @@
 import json
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List
-from .excepciones import NoExisteCapitulo
 
 log = logging.getLogger("manga_scrap")
 
@@ -39,6 +38,7 @@ class MangaPreview(JsonSerializable):
     enlace_imagen: str
     enlace_manga: str
     generos: List[Genero]
+    contenido_adulto: bool = False
 
 
 @dataclass()
@@ -48,65 +48,33 @@ class Imagen(JsonSerializable):
     """
     enlace: str
 
-
 @dataclass()
-class Capitulo(JsonSerializable):
+class CapituloPreview(JsonSerializable):
     """
-    Representación de un único capítulo de un manga. Las imágenes de un capítulo se van poblando en la medida
-    que el capítulo es consultado.
+    Representación de un capítulo antes de abrirse, útil para la vista de detalle.
     """
     nombre: str
     enlace: str
-    imagenes: List[Imagen] = field(default_factory=list)
+
+@dataclass()
+class CapituloDetalle(JsonSerializable):
+    """
+    Representación de un capítulo cuando se está viendo, incluye su información y todas las imágenes del susodicho capítulo.
+    """
+    nombre: str
+    enlace: str
+    imagenes: List[Imagen]
 
 
 @dataclass()
-class Manga(JsonSerializable):
+class MangaDetalle(JsonSerializable):
     """
-    Representación de un manga, con toda su información.
+    Representación de un manga con información detallada, útil para vistas de detalle.
+    """
 
-    :param: nombre: str
-    :param: imagen: str
-    :param: enlace: str
-    :param: capitulos: List[Capitulo]
-    """
     nombre: str
     imagen: str
     enlace: str
-    capitulos: List[Capitulo]
+    contenido_adulto: bool
     generos: List[Genero]
-    contenido_adulto: bool = False
-
-    @property
-    def n_capitulos(self) -> int:
-        return len(self.capitulos)
-
-    @property
-    def n_imagenes(self) -> int:
-        total = 0
-        for c in self.capitulos:
-            total += len(c.imagenes)
-
-        return total
-
-    @property
-    def n_generos(self) -> int:
-        return len(self.generos)
-
-    def obtener_capitulo(self, index: int):
-        try:
-            capitulo = self.capitulos[index]
-        except IndexError:
-            raise NoExisteCapitulo(self, index)
-        else:
-            return capitulo
-
-    def __str__(self):
-        return \
-            f"*** Manga *** \n" \
-            f"nombre: {self.nombre} \n" \
-            f"enlace: {self.enlace} \n" \
-            f"Generos: {self.generos} \n" \
-            f"imagen: {self.imagen} \n" \
-            f"nº caps: {self.n_capitulos} \n" \
-            f"nº imágenes: {self.n_imagenes}"
+    capitulos: List[CapituloPreview]
