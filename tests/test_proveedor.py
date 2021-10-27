@@ -3,7 +3,7 @@ import unittest
 from manga_scrap.modelos import MangaPreview, Genero
 from manga_scrap.proveedores.prueba import PruebaProveedor
 
-
+#TODO probar todos los métodos de Proovedor!
 class ProveedorTest(unittest.TestCase):
     proveedor: PruebaProveedor
 
@@ -27,32 +27,21 @@ class ProveedorTest(unittest.TestCase):
             self.assertIsNotNone(preview.enlace_imagen)
 
     def test_al_generar_un_manga_no_es_none(self):
-        manga = self.proveedor.obtener_manga(
+        manga = self.proveedor.obtener_manga_detalle(
             self.catalogo[0])  # generar un manga a partir de la primera entrada de catálogo
         self.assertIsNotNone(manga)
 
     def test_obtener_manga_fuera_de_catalogo_lo_agrega_a_catalogo(self):
         preview = MangaPreview(nombre="nombre", enlace_manga="enlace_manga", enlace_imagen="enlace_imagen",
-                               generos=[Genero("Hentai")])
-        manga = self.proveedor.obtener_manga(preview)
+                               generos=[Genero("Hentai")], contenido_adulto=True)
+        manga = self.proveedor.obtener_manga_detalle(preview)
         self.assertEqual(preview.nombre, manga.nombre)
         self.assertEqual(preview.enlace_manga, manga.enlace)
         self.assertEqual(preview.enlace_imagen, manga.imagen)
 
-        self.assertEqual(9, manga.n_imagenes)
-        self.assertEqual(3, manga.n_capitulos)
-
-    def test_imagenes_anadidas_al_capitulo(self):
-        manga = self.proveedor.obtener_manga(self.catalogo[0])
-        self.proveedor.obtener_img(manga.capitulos[0])
-        self.assertEqual(2, len(manga.capitulos[0].imagenes))
-
     def test_generos_anidadas_al_manga(self):
-        manga = self.proveedor.obtener_manga(self.catalogo[0])
+        manga = self.proveedor.obtener_manga_detalle(self.catalogo[0])
         self.assertEqual(Genero("Hentai"), manga.generos[0])
-
-
-##tdd test driven developen
 
 if __name__ == '__main__':
     unittest.main()
