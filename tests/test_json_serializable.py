@@ -1,6 +1,6 @@
 import unittest
 import json
-from manga_scrap.modelos import JsonSerializable, Imagen, Genero
+from manga_scrap.modelos import JsonSerializable
 from dataclasses import dataclass
 
 

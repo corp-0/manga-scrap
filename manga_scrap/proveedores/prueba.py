@@ -40,7 +40,7 @@ class PruebaProveedor(Proveedor):
 
         return detalle
 
-    def obtener_capitulo_detalle(self, enlace: str) -> CapituloDetalle:
+    def obtener_capitulo_detalle(self, capitulo: CapituloPreview) -> CapituloDetalle:
         imagenes: List[Imagen] = []
         for i in range(1, 4):
             img = Imagen("https://dummy-img/i")
