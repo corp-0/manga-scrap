@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "manga-scrap"
-version = "0.2.1"
+version = "0.3.0"
 description = "A flexible and extensible library to scrap manga and convert it to usable models"
 authors = ["Andrés Riquelme <andresfranco.rs@gmail.com>", "Sebastián Sandoval <root.kan.ss@gmail.com>"]
 
