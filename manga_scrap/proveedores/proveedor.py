@@ -63,7 +63,7 @@ class Proveedor(ABC):
         """
 
     @abstractmethod
-    def obtener_capitulo_detalle(self, capitulo: CapituloPreview) -> CapituloDetalle:
+    def obtener_capitulo_detalle(self, enlace_capitulo: str) -> CapituloDetalle:
         """
         Scrapea un preview de capitulo y devuelve todo el contenido de un capítulo
         :param enlace:

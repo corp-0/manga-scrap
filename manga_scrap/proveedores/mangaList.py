@@ -41,10 +41,13 @@ class MangaList(Proveedor):
             capitulos=capitulos
         )
 
-    def obtener_capitulo_detalle(self, capitulo: CapituloPreview) -> CapituloDetalle:
-        log.debug(f"Obteniendo todo el contenido de capítulo {capitulo}...")
-        r = requests.get(capitulo.enlace)
+    def obtener_capitulo_detalle(self, enlace_capitulo: str) -> CapituloDetalle:
+        log.debug(f"Obteniendo todo el contenido de capítulo {enlace_capitulo}...")
+        r = requests.get(enlace_capitulo)
         soup = BS(r.text, features="html.parser")
+
+        nombre = soup.find('h1', attrs={'id': 'chapter-heading'}).contents[0].strip()
+
         images = soup.find_all("div", {"id": "images_chapter"})
         lista_images = []
         img = images[0].contents
@@ -53,7 +56,7 @@ class MangaList(Proveedor):
                 imagen = Imagen(enlace_img.attrs.get("data-src"))
                 lista_images.append(imagen)
 
-        return CapituloDetalle(capitulo.nombre, capitulo.enlace, lista_images)
+        return CapituloDetalle(nombre, enlace_capitulo, lista_images)
 
     def _obtener_preview_mangas(self, page: int):
         log.debug("Generando previews")
