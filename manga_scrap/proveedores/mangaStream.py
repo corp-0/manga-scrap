@@ -1,9 +1,11 @@
+import logging
 from typing import List
+
+import requests
+from bs4 import BeautifulSoup as BS
+
 from manga_scrap.modelos import MangaPreview, Imagen, Genero, CapituloPreview, CapituloDetalle, MangaDetalle
 from manga_scrap.proveedores.proveedor import Proveedor
-import requests
-from bs4 import BeautifulSoup as BS, Tag
-import logging
 
 log = logging.getLogger("manga_scrap")
 
@@ -39,18 +41,19 @@ class MangaStream(Proveedor):
             capitulos=capitulos
         )
 
-    def obtener_capitulo_detalle(self, capitulo: CapituloPreview) -> CapituloDetalle:
-        log.debug(f"Obteniendo todo el contenido de capítulo {capitulo}...")
-        r = requests.get(capitulo.enlace)
+    def obtener_capitulo_detalle(self, enlace_capitulo: str) -> CapituloDetalle:
+        log.debug(f"Obteniendo todo el contenido de capítulo {enlace_capitulo}...")
+        r = requests.get(enlace_capitulo)
         soup = BS(r.text, features="html.parser")
         images_bruto = soup.find_all('div', attrs={'class': 'chapter-content-inner text-center image-auto'})
         images = images_bruto[0].contents[1].contents[0]
-        lista = [images.split(',')]
+        lista = images.split(',')
         lista_img = []
         for img in lista:
             imagen = Imagen(img)
             lista_img.append(imagen)
-        return CapituloDetalle(capitulo.nombre, capitulo.enlace, lista_img)
+        titulo = soup.find('h1', attrs={'class': 'chapter-title'}).contents[0]
+        return CapituloDetalle(titulo, enlace_capitulo, lista_img)
 
     def _obtener_preview_mangas(self, page: int):
         log.debug("Generando previews")
@@ -58,21 +61,16 @@ class MangaStream(Proveedor):
         soup = BS(r.text, features='html.parser')
         cosa = soup.find_all("div", {"class": "media mainpage-manga"})
         mangas_previews = []
-        lista = []
-        lista_genero = []
         for resultado in cosa:
             enlace = resultado.contents[3].contents[1].attrs.get("href")
             imagen = resultado.contents[1].contents[1].contents[1].attrs.get("src")
             nombre = resultado.contents[3].contents[1].attrs.get("title")
-            genero_bruto = resultado.contents[3].contents[3]
-            genero_menos_bruto = genero_bruto.contents[2]
-            lista.append(genero_menos_bruto.split(';'))
-            for g in lista:
-                lista_genero.append(Genero(g))
+            generos = resultado.contents[3].contents[3].contents[2]
+            lista_genero = [Genero(g.strip()) for g in generos.split(';')]
             manga = MangaPreview(nombre, imagen, enlace, lista_genero)
             log.debug(f'Nombre manga: {nombre}')
             mangas_previews.append(manga)
-            return mangas_previews
+        return mangas_previews
 
     def _obtener_capitulos(self, enlace: str):
         log.debug(f"Obteniendo capítulos desde enlace {enlace}...")
